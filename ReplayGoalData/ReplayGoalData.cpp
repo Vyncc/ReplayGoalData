@@ -2,6 +2,7 @@
 #include "ReplayGoalData.h"
 
 #include <filesystem>
+#include <thread>
 
 BAKKESMOD_PLUGIN(ReplayGoalData, "ReplayGoalData", plugin_version, PLUGINTYPE_FREEPLAY)
 
@@ -19,26 +20,34 @@ void ReplayGoalData::onLoad()
 	
 	cvarManager->registerNotifier("GetGoalsData", [&](std::vector<std::string> args)
 		{
-			GoalHitLocations.clear();
-			_shotLocations.clear();
-
-			std::string replaysPath = "C:\\Users\\snipj\\Documents\\replaysTest";
-			for (const auto& file : std::filesystem::directory_iterator(replaysPath))
-			{
-				LOG("Getting goals data from {}", file.path().string());
-				GetGoalsData(file.path());
-			}
-
-			LOG("GoalHitLocations count : {}", GoalHitLocations.size());
 
 
-			for (auto goalHitLoc : GoalHitLocations)
-			{
-				registerImpactLocation(goalHitLoc);
-			}
-			LOG("Registration finished!");
+			std::thread t2(&ReplayGoalData::startProcess, this);
+			t2.detach();
 
 		}, "", 0);
+}
+
+void ReplayGoalData::startProcess()
+{
+	GoalHitLocations.clear();
+	_shotLocations.clear();
+
+	std::string replaysPath = "C:\\Users\\snipj\\Documents\\replaysTest";
+	for (const auto& file : std::filesystem::directory_iterator(replaysPath))
+	{
+		LOG("Getting goals data from {}", file.path().string());
+		GetGoalsData(file.path());
+	}
+
+	LOG("GoalHitLocations count : {}", GoalHitLocations.size());
+
+
+	//for (auto goalHitLoc : GoalHitLocations)
+	//{
+	//	registerImpactLocation(goalHitLoc);
+	//}
+	//LOG("Registration finished!");
 }
 
 void ReplayGoalData::GetGoalsData(std::filesystem::path filePath)
@@ -103,7 +112,13 @@ void ReplayGoalData::GetGoalsData(std::filesystem::path filePath)
 		LOG("Ball Location : x : {} | y : {} | z : {}", BallRBStates[frame].position.x, BallRBStates[frame].position.y, BallRBStates[frame].position.z);
 		LOG("--------------------------------------------");*/
 
-		GoalHitLocations.push_back(Vector{ BallRBStates[frame].position.x, BallRBStates[frame].position.y, BallRBStates[frame].position.z });
+		Vector GoalHitLoc = { BallRBStates[frame].position.x, BallRBStates[frame].position.y, BallRBStates[frame].position.z };
+		if (GoalHitLoc.Y < 0) //if the goal is blue side
+		{
+			GoalHitLoc.X = GoalHitLoc.X * -1;
+		}
+		GoalHitLocations.push_back(GoalHitLoc);
+		registerImpactLocation(GoalHitLoc);
 
 		goal_index++;
 	}

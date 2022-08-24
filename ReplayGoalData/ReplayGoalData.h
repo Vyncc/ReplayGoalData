@@ -41,6 +41,8 @@ public:
 	float _maximumValue = 0; ///< The maximum value of all brackets
 	
 
+	void startProcess();
+
 	template<typename T>
 	void try_get_prop(const std::string& prop_name, T& val)
 	{
