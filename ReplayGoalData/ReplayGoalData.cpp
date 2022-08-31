@@ -33,7 +33,7 @@ void ReplayGoalData::startProcess()
 	GoalHitLocations.clear();
 	_shotLocations.clear();
 
-	std::string replaysPath = "C:\\Users\\snipj\\Documents\\replaysTest";
+	std::string replaysPath = "C:\\Users\\snipj\\Documents\\replaysTest - Copie\\playoffs";
 	for (const auto& file : std::filesystem::directory_iterator(replaysPath))
 	{
 		LOG("Getting goals data from {}", file.path().string());
@@ -182,6 +182,11 @@ void ReplayGoalData::renderOneFrame(CanvasWrapper canvas)
 	{
 		renderHeatMap(canvas);
 	}
+
+	if (_impactMapIsVisible)
+	{
+		renderImpactMap(canvas);
+	}
 }
 
 
@@ -200,6 +205,16 @@ void ReplayGoalData::renderHeatMap(CanvasWrapper& canvas)
 				drawRectangle(x, z, canvas);
 			}
 		}
+	}
+}
+
+void ReplayGoalData::renderImpactMap(CanvasWrapper& canvas)
+{
+	canvas.SetColor(LinearColor{ 255.0f, 0.0f, 255.0f, 200.0f });
+
+	for (auto shotLocation : _shotLocations)
+	{
+		drawRect(shotLocation.X - 15.0f, shotLocation.Z - 15.0f, 30.0f, 30.0f, YDrawLocation - 5.0f, gameWrapper->GetCamera(), canvas);
 	}
 }
 

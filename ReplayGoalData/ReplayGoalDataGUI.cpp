@@ -17,6 +17,7 @@ void ReplayGoalData::SetImGuiContext(uintptr_t ctx)
 void ReplayGoalData::RenderSettings()
 {
 	ImGui::Checkbox("_heatMapIsVisible", &_heatMapIsVisible);
+	ImGui::Checkbox("_impactMapIsVisible", &_impactMapIsVisible);
 
 	for (auto goalHitLoc : GoalHitLocations)
 	{

@@ -39,6 +39,10 @@ public:
 	static const int ZBrackets = 80; ///< Defines the number of brackets in Z dimension. The number 4000 should be dividable by this number.
 	std::array<std::array<float, ZBrackets>, XBrackets> _heatmapData; ///< Stores the number of hits in each cell
 	float _maximumValue = 0; ///< The maximum value of all brackets
+
+	bool _impactMapIsVisible = false;
+	float _impactScale = 1.f;
+	void renderImpactMap(CanvasWrapper& canvas);
 	
 
 	void startProcess();
