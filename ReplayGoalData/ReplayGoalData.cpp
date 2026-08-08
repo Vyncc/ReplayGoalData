@@ -26,6 +26,109 @@ void ReplayGoalData::onLoad()
 			t2.detach();
 
 		}, "", 0);
+
+	cvarManager->registerNotifier("aaaaa", [&](std::vector<std::string> args)
+		{
+
+
+			/*nlohmann::ordered_json j2 = {
+			  {"id", 3.141},
+			  {"mmr", {
+				  {
+					  {"playerId", "IQAAAGM5NTE1YWE3NjY4ZDQwYjE5MTgzODQ1YTVkOTlkZWFmAA=="},
+					  {"playlist", 5},
+					  {"matchPlayed", 10},
+					  {"division", 2},
+					  {"rank", 10},
+					  {"mmr", 5},
+					  {"mmrChanged", 12}
+				  },{
+					  {"playerId", "sfqfERGERY5TYRTHYRTY=="},
+					  {"playlist", 5},
+					  {"matchPlayed", 10},
+					  {"division", 2},
+					  {"rank", 10},
+					  {"mmr", 5},
+					  {"mmrChanged", 12}
+				  },{
+					  {"playerId", "13FE5R4FSDFS123ET4E65162315846Z=="},
+					  {"playlist", 5},
+					  {"matchPlayed", 10},
+					  {"division", 2},
+					  {"rank", 10},
+					  {"mmr", 5},
+					  {"mmrChanged", 12}
+				  }}},
+			};
+
+
+			LOG("{}", j2.dump());*/
+
+			//replayFile = std::make_shared<CPPRP::ReplayFile>("C:\\Users\\snipj\\AppData\\Roaming\\bakkesmod\\bakkesmod\\data\\ReplayUploader\\duel.replay");
+
+			//replayFile->Load();
+			//replayFile->DeserializeHeader();
+
+			//replayFile->Parse();
+
+			///*auto replay_id = replayFile->GetProperty<std::string>("Id");
+			//LOG("replay_id : {}", replay_id);*/
+			//auto replay_name = replayFile->GetProperty<std::string>("ReplayName");
+			//LOG("replay_name : {}", replay_name);
+
+
+			/*std::filesystem::path replay_path = "C:\\Users\\snipj\\Documents\\replaysTest\\0a7b7f60-ca33-4119-a637-27d288c7bc3f.replay";
+			auto replay_file = CPPRP::ReplayFile(replay_path.string());
+			if (!replay_file.Load())
+			{
+				LOG("Load failed");
+				throw std::runtime_error("Failed to load the replay data");
+			}
+			if (!replay_file.VerifyCRC(CPPRP::CRC_Both))
+			{
+				throw std::invalid_argument("CRC check for replay failed");
+			}
+
+
+			replay_file.DeserializeHeader();
+			replay_file.Parse();
+
+			std::string name;
+
+			try_get_prop("ReplayName", name);
+
+			LOG("name : {}", name);*/
+
+			std::filesystem::path replay_path = "C:\\Users\\snipj\\Documents\\replaysTest\\0a7b7f60-ca33-4119-a637-27d288c7bc3f.replay";
+			replayFile = std::make_shared<CPPRP::ReplayFile>(replay_path.string());
+
+			replayFile->Load();
+			replayFile->DeserializeHeader();
+
+			/*BallRBStates.clear();
+
+			replayFile->tickables.push_back([&](const CPPRP::Frame f, const std::unordered_map<uint32_t, CPPRP::ActorStateData>& actorStats)
+				{
+					for (auto& actor : actorStats)
+					{
+						std::shared_ptr<CPPRP::TAGame::Ball_TA> ball = std::dynamic_pointer_cast<CPPRP::TAGame::Ball_TA>(actor.second.actorObject);
+						if (ball)
+						{
+							CPPRP::ReplicatedRBState ballrbstate = ball->ReplicatedRBState;
+							BallRBStates.push_back(ballrbstate);
+						}
+					}
+				});*/
+
+
+
+			replayFile->Parse();
+
+
+			auto replay_name = replayFile->GetProperty<std::string>("ReplayName");
+			LOG("name : {}", replay_name);
+
+		}, "", 0);
 }
 
 void ReplayGoalData::startProcess()
